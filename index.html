@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Kayode Omolafe — video editor and motion designer. Long-form YouTube, short-form reels and motion graphics in Premiere Pro, After Effects, CapCut and AI tools.">
+<meta property="og:title" content="Kayode Omolafe — Video Editor">
+<meta property="og:description" content="Long-form YouTube, reels and motion graphics. 3 years of editing experience.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0E1013">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230E1013'/%3E%3Cpath d='M12 9l12 7-12 7z' fill='%23F5B03C'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Kayode Omolafe — Video Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: an edit suite. Hero = program monitor with live timecode; work = bins of clips; toolkit = a timeline with tracks. Single dark look, by choice. */
+:root {
+  --ink: #0E1013;        /* suite background */
+  --panel: #171A1F;      /* panel surfaces */
+  --line: #2A2F37;       /* hairlines, track dividers */
+  --fg: #ECE8E0;         /* main text */
+  --muted: #9AA0A8;      /* secondary text */
+  --playhead: #F5B03C;   /* accent: playhead amber */
+  --clip-v: #6E8BD8;     /* video clip blue */
+  --clip-a: #4FB79A;     /* audio clip green */
+  --clip-fx: #C77BC9;    /* graphics clip violet */
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--ink); color: var(--fg);
+  font: 400 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+a { color: var(--playhead); }
+:focus-visible { outline: 2px solid var(--playhead); outline-offset: 3px; }
+
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* top bar */
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 20px; border-bottom: 1px solid var(--line); }
+.bar .rec { display: inline-flex; align-items: center; gap: 8px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--clip-a); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clip-a) 25%, transparent); }
+.bar nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.bar nav a { color: var(--fg); text-decoration: none; font-size: 14px; }
+.bar nav a:hover { color: var(--playhead); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; align-items: center; padding-block: 56px 40px; }
+.hero h1 { font: 900 clamp(64px, 11vw, 148px)/.84 var(--display); text-transform: uppercase; margin: 18px 0 0; letter-spacing: -.01em; }
+.hero h1 span { display: block; color: transparent; -webkit-text-stroke: 2px var(--fg); }
+.role { font: 600 clamp(20px, 2.4vw, 26px)/1.25 var(--display); text-transform: uppercase; letter-spacing: .04em; color: var(--playhead); margin: 22px 0 14px; }
+.lede { color: var(--muted); max-width: 46ch; margin: 0; font-size: 17px; }
+.lede strong { color: var(--fg); font-weight: 500; }
+.stats { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 30px; }
+.stats div { display: grid; gap: 6px; }
+.stats b { font: 800 40px/1 var(--display); }
+.stats small { font: 400 12px/1.3 var(--mono); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+
+.monitor { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.monitor-head, .monitor-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; font: 400 12px/1 var(--mono); color: var(--muted); }
+.monitor video { display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; background: #000; object-fit: cover; }
+.tc { color: var(--playhead); font-size: 15px; font-weight: 600; }
+.scrub { position: relative; height: 22px; margin: 0 14px; border-top: 1px solid var(--line); }
+.scrub i { position: absolute; bottom: 0; width: 1px; background: var(--line); }
+.scrub .ph { position: absolute; top: -4px; bottom: 0; width: 2px; background: var(--playhead); left: 0; transition: left .1s linear; }
+.scrub .ph::before { content: ""; position: absolute; top: 0; left: -5px; border: 6px solid transparent; border-top-color: var(--playhead); }
+.sound { background: none; border: 1px solid var(--line); color: var(--fg); font: 600 12px/1 var(--mono); padding: 7px 10px; border-radius: 6px; cursor: pointer; }
+.sound:hover { border-color: var(--playhead); color: var(--playhead); }
+
+/* sections */
+section { padding-block: 72px; border-top: 1px solid var(--line); }
+.sec-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 36px; }
+h2 { font: 800 clamp(40px, 6vw, 72px)/.9 var(--display); text-transform: uppercase; margin: 10px 0 0; text-wrap: balance; }
+.sec-head p { color: var(--muted); max-width: 44ch; margin: 0; }
+
+/* work */
+.work-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.work-tall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
+.clip { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.frame { position: relative; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid var(--line); }
+.frame video { display: block; width: 100%; max-width: 100%; background: #000; }
+.work-wide .frame video { aspect-ratio: 16 / 9; }
+.work-tall .frame video { aspect-ratio: 9 / 16; object-fit: cover; }
+.frame .badge { position: absolute; top: 10px; left: 10px; font: 600 11px/1 var(--mono); padding: 6px 8px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 78%, transparent); color: var(--fg); pointer-events: none; letter-spacing: .04em; }
+.clip-meta { display: flex; justify-content: space-between; gap: 12px; font: 400 12px/1.2 var(--mono); color: var(--muted); }
+.clip h3 { font: 800 30px/1 var(--display); text-transform: uppercase; margin: 0; letter-spacing: .01em; }
+.clip p { margin: 0; color: var(--muted); font-size: 15px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { font: 500 12px/1 var(--body); padding: 6px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+/* timeline toolkit */
+.timeline { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); overflow-x: auto; }
+.tl-inner { min-width: 680px; }
+.ruler { display: grid; grid-template-columns: 150px 1fr; border-bottom: 1px solid var(--line); }
+.ruler .ticks { display: flex; justify-content: space-between; padding: 10px 14px; font: 400 11px/1 var(--mono); color: var(--muted); }
+.track { display: grid; grid-template-columns: 150px 1fr; border-bottom: 1px solid var(--line); min-height: 76px; }
+.track:last-child { border-bottom: 0; }
+.track-label { display: flex; align-items: center; gap: 10px; padding: 0 14px; border-right: 1px solid var(--line); font: 600 13px/1 var(--mono); }
+.track-label em { font-style: normal; color: var(--muted); font-weight: 400; }
+.lane { position: relative; padding: 12px; display: flex; gap: 6px; }
+.blk { border-radius: 5px; padding: 9px 12px; font-size: 13px; line-height: 1.3; color: #0E1013; display: grid; gap: 2px; min-width: 0; }
+.blk b { font-weight: 600; }
+.blk small { opacity: .78; font-size: 12px; }
+.v { background: var(--clip-v); } .fx { background: var(--clip-fx); } .a { background: var(--clip-a); } .ai { background: var(--playhead); }
+.tl-playhead { position: absolute; top: 0; bottom: 0; left: 62%; width: 2px; background: var(--playhead); opacity: .9; }
+
+/* services */
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.svc { padding: 28px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+.svc h3 { font: 800 26px/1 var(--display); text-transform: uppercase; margin: 0; }
+.svc p { margin: 0; color: var(--muted); font-size: 15px; }
+.svc .mono { font-size: 12px; color: var(--playhead); }
+
+/* process */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; counter-reset: s; }
+.step { display: grid; gap: 10px; align-content: start; padding-top: 18px; border-top: 2px solid var(--line); }
+.step:first-child { border-top-color: var(--playhead); }
+.step .mono { font-size: 12px; color: var(--muted); }
+.step h3 { font: 800 28px/1 var(--display); text-transform: uppercase; margin: 0; }
+.step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* closing */
+.cta { padding-block: 88px 64px; display: grid; gap: 22px; }
+.cta h2 { font-size: clamp(52px, 9vw, 120px); }
+.cta h2 span { color: var(--playhead); }
+.cta p { color: var(--muted); max-width: 52ch; margin: 0; font-size: 17px; }
+.contact { display: grid; gap: 12px; margin-top: 12px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); max-width: 640px; }
+.contact-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.email { font: 800 clamp(24px, 4vw, 36px)/1.1 var(--display); color: var(--fg); text-decoration: none; overflow-wrap: anywhere; user-select: all; min-width: 0; }
+.email:hover { color: var(--playhead); }
+.copy { background: var(--playhead); color: var(--ink); border: 0; font: 600 13px/1 var(--mono); padding: 11px 14px; border-radius: 6px; cursor: pointer; }
+.copy:hover { filter: brightness(1.08); }
+.foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 24px 40px; border-top: 1px solid var(--line); font: 400 12px/1.4 var(--mono); color: var(--muted); }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 36px 24px; }
+  .work-wide { grid-template-columns: minmax(0, 1fr); }
+  .work-tall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .work-tall { grid-template-columns: minmax(0, 1fr); max-width: 360px; margin-inline: auto; }
+  .services, .steps { grid-template-columns: minmax(0, 1fr); }
+  section { padding-block: 52px; }
+  .bar nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .scrub .ph { transition: none; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <span class="eyebrow rec"><span class="dot"></span>Available for new projects</span>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Video editor &amp; motion designer</span>
+      <h1>Kayode<span>Omolafe</span></h1>
+      <p class="role">Edits that hold attention to the last frame</p>
+      <p class="lede">I cut <strong>long-form YouTube</strong>, <strong>short-form reels</strong> and <strong>motion-graphic explainers</strong> for coaches, creators and real-estate brands. Every cut, caption and graphic is there to keep the viewer watching and move them to act.</p>
+      <div class="stats">
+        <div><b>3 yrs</b><small>Editing professionally</small></div>
+        <div><b>16:9 + 9:16</b><small>Long &amp; short form</small></div>
+        <div><b>4</b><small>Core tools</small></div>
+      </div>
+    </div>
+
+    <figure class="monitor" style="margin:0">
+      <div class="monitor-head"><span>PROGRAM · SHOWREEL_2026</span><span class="tc" id="tc">00:00:00:00</span></div>
+      <video id="reel" src="media/showreel.mp4" poster="media/showreel.jpg" autoplay muted loop playsinline preload="auto" aria-label="Showreel of selected edits"></video>
+      <div class="scrub" id="scrub" aria-hidden="true"><span class="ph" id="ph"></span></div>
+      <div class="monitor-foot"><span>30 fps · 1280×720</span><span>DUR 00:00:28:15</span></div>
+    </figure>
+  </div>
+
+  <section id="work">
+    <div class="sec-head">
+      <div><span class="eyebrow">Bin 01 · Selected work</span><h2>Recent edits</h2></div>
+      <p>Five projects from the last year. Press play on any of them; the long-form pieces are 60-second excerpts.</p>
+    </div>
+
+    <div class="work-wide">
+      <article class="clip">
+        <div class="frame"><span class="badge">16:9 · 11:51</span>
+          <video controls preload="none" playsinline poster="media/strategy-longform.jpg" src="media/strategy-longform.mp4" aria-label="Mindset Shifts long-form excerpt"></video></div>
+        <div class="clip-meta"><span><i class="swatch v"></i>Long-form YouTube</span><span>Upperhand</span></div>
+        <h3>The Mindset Shifts</h3>
+        <p>A 12-minute business-strategy video built around motion graphics: animated stat cards, before-and-after counters, phase titles and kinetic captions that turn a talking head into a story.</p>
+        <div class="tags"><span>Premiere Pro</span><span>After Effects</span><span>Motion graphics</span><span>Sound design</span></div>
+      </article>
+
+      <article class="clip">
+        <div class="frame"><span class="badge">16:9 · 3:56</span>
+          <video controls preload="none" playsinline poster="media/tamika-youtube.jpg" src="media/tamika-youtube.mp4" aria-label="Tamika Johnson YouTube excerpt"></video></div>
+        <div class="clip-meta"><span><i class="swatch v"></i>YouTube · Real estate</span><span>Tamika Johnson</span></div>
+        <h3>Selling Your Home Right</h3>
+        <p>A clean, fast-paced real-estate explainer with punch-in jump cuts, supporting B-roll, branded title cards and an animated subscribe prompt.</p>
+        <div class="tags"><span>Premiere Pro</span><span>B-roll</span><span>Title design</span><span>Color</span></div>
+      </article>
+    </div>
+
+    <div class="work-tall">
+      <article class="clip">
+        <div class="frame"><span class="badge">9:16 · 1:15</span>
+          <video controls preload="none" playsinline poster="media/upperhand-reel.jpg" src="media/upperhand-reel.mp4" aria-label="Elite Editor Academy test edit"></video></div>
+        <div class="clip-meta"><span><i class="swatch fx"></i>Short-form · Motion</span><span>Elite Editor Academy</span></div>
+        <h3>The Hook Trap</h3>
+        <p>A test edit packed with kinetic typography, neon type, textured paper backgrounds and counters, timed to every beat of the script.</p>
+        <div class="tags"><span>After Effects</span><span>Kinetic type</span></div>
+      </article>
+
+      <article class="clip">
+        <div class="frame"><span class="badge">9:16 · 1:30</span>
+          <video controls preload="none" playsinline poster="media/dinora-reel.jpg" src="media/dinora-reel.mp4" aria-label="Dinora Chacon educational reel"></video></div>
+        <div class="clip-meta"><span><i class="swatch a"></i>Educational reel</span><span>Dinora Chacon</span></div>
+        <h3>Buy &amp; Sell at Once</h3>
+        <p>A real-estate explainer reel with bold word-by-word captions, story-driven stock B-roll and a branded end card with the agent's contact details.</p>
+        <div class="tags"><span>Premiere Pro</span><span>Captions</span><span>Stock B-roll</span></div>
+      </article>
+
+      <article class="clip">
+        <div class="frame"><span class="badge">9:16 · 0:57</span>
+          <video controls preload="none" playsinline poster="media/erin-reel.jpg" src="media/erin-reel.mp4" aria-label="Erin Rose reel"></video></div>
+        <div class="clip-meta"><span><i class="swatch a"></i>Short-form · Real estate</span><span>Erin Rose</span></div>
+        <h3>Outgrown Your Home</h3>
+        <p>A social reel with styled captions and keyword highlights, blur transitions, lifestyle B-roll and an aerial brand outro.</p>
+        <div class="tags"><span>CapCut</span><span>Premiere Pro</span><span>Transitions</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="toolkit">
+    <div class="sec-head">
+      <div><span class="eyebrow">Sequence 02 · Toolkit</span><h2>How I build an edit</h2></div>
+      <p>Every project runs on the same stack, track by track. AI tools handle the slow work so I can spend more time on pacing and story.</p>
+    </div>
+    <div class="timeline" role="table" aria-label="Editing toolkit as timeline tracks">
+      <div class="tl-inner">
+        <div class="ruler" aria-hidden="true"><span></span><div class="ticks mono"><span>00:00</span><span>00:15</span><span>00:30</span><span>00:45</span><span>01:00</span><span>01:15</span></div></div>
+        <div class="track" role="row"><div class="track-label" role="rowheader">V3 <em>Graphics</em></div>
+          <div class="lane" role="cell"><div class="blk fx" style="flex:3"><b>After Effects</b><small>Motion graphics, kinetic type, animated stat cards</small></div><div class="blk fx" style="flex:2"><b>Lower thirds &amp; titles</b><small>Brand-matched templates</small></div><span class="tl-playhead"></span></div></div>
+        <div class="track" role="row"><div class="track-label" role="rowheader">V2 <em>Captions</em></div>
+          <div class="lane" role="cell"><div class="blk v" style="flex:2"><b>CapCut</b><small>Fast social cuts and styled captions</small></div><div class="blk v" style="flex:3"><b>Animated captions</b><small>Word-by-word with keyword highlights</small></div><span class="tl-playhead"></span></div></div>
+        <div class="track" role="row"><div class="track-label" role="rowheader">V1 <em>Edit</em></div>
+          <div class="lane" role="cell"><div class="blk v" style="flex:5"><b>Premiere Pro</b><small>Story structure, pacing, jump cuts, B-roll, color correction, exports for every platform</small></div><span class="tl-playhead"></span></div></div>
+        <div class="track" role="row"><div class="track-label" role="rowheader">A1 <em>Audio</em></div>
+          <div class="lane" role="cell"><div class="blk a" style="flex:3"><b>Dialogue cleanup</b><small>Noise removal, leveling, loudness</small></div><div class="blk a" style="flex:2"><b>Music &amp; SFX</b><small>Whooshes, risers, pops</small></div><span class="tl-playhead"></span></div></div>
+        <div class="track" role="row"><div class="track-label" role="rowheader">FX <em>AI tools</em></div>
+          <div class="lane" role="cell"><div class="blk ai" style="flex:2"><b>Transcripts</b><small>Text-based cuts</small></div><div class="blk ai" style="flex:2"><b>Auto-captions</b><small>Then checked by hand</small></div><div class="blk ai" style="flex:2"><b>Voice &amp; image</b><small>Enhance, upscale, generate</small></div><span class="tl-playhead"></span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="sec-head">
+      <div><span class="eyebrow">Export presets · Services</span><h2>What I deliver</h2></div>
+      <p>Tell me where the video will live and I will cut it for that platform.</p>
+    </div>
+    <div class="services">
+      <div class="svc"><span class="mono">16:9 · 8–20 min</span><h3>Long-form YouTube</h3><p>Story-first edits with retention-focused pacing, B-roll and graphics that explain the point.</p></div>
+      <div class="svc"><span class="mono">9:16 · 15–90 s</span><h3>Reels &amp; Shorts</h3><p>Strong hooks in the first three seconds, tight cuts and captions made for silent scrolling.</p></div>
+      <div class="svc"><span class="mono">After Effects</span><h3>Motion graphics</h3><p>Kinetic typography, animated data and branded title packages that make ideas visible.</p></div>
+      <div class="svc"><span class="mono">SRT · burned-in</span><h3>Captions</h3><p>Accurate, styled captions with highlighted keywords, timed to the speaker.</p></div>
+      <div class="svc"><span class="mono">Rec. 709 · −14 LUFS</span><h3>Color &amp; audio polish</h3><p>Consistent skin tones, clean dialogue and loudness levels that suit each platform.</p></div>
+      <div class="svc"><span class="mono">1 video → many</span><h3>Content repurposing</h3><p>One long video cut into a set of shorts, each with its own hook and caption style.</p></div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="sec-head">
+      <div><span class="eyebrow">Workflow</span><h2>From raw footage to final export</h2></div>
+      <p>A clear process means fewer revision rounds and on-time delivery.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="mono">Step 1</span><h3>Brief</h3><p>Your goal, audience, references and brand assets. I review the raw footage before cutting.</p></div>
+      <div class="step"><span class="mono">Step 2</span><h3>Rough cut</h3><p>Structure and pacing first. The story has to work before any effects go in.</p></div>
+      <div class="step"><span class="mono">Step 3</span><h3>Polish</h3><p>Graphics, captions, sound design and color, then a round of your notes.</p></div>
+      <div class="step"><span class="mono">Step 4</span><h3>Deliver</h3><p>Final exports in every size you need, plus project files on request.</p></div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <span class="eyebrow">Ready to render</span>
+    <h2>Got footage?<br><span>Let's cut it.</span></h2>
+    <p>I'm Kayode Omolafe, a video editor with three years of experience in Premiere Pro, After Effects, CapCut and AI tools. Send me your raw footage and a short brief, and I'll turn it into content people watch to the end.</p>
+    <div class="contact" id="contact">
+      <span class="eyebrow">Email</span>
+      <div class="contact-row">
+        <a class="email" id="email" href="mailto:kayodeomolafe68@gmail.com">kayodeomolafe68@gmail.com</a>
+        <button class="copy" id="copy" type="button">Copy email</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>© 2026 Kayode Omolafe · Video editor</span>
+    <span>Premiere Pro · After Effects · CapCut · AI tools</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var reel = document.getElementById('reel');
+  var tc = document.getElementById('tc');
+  var ph = document.getElementById('ph');
+  var scrub = document.getElementById('scrub');
+  var FPS = 30;
+  // ruler ticks
+  for (var i = 1; i < 28; i++) {
+    var t = document.createElement('i');
+    t.style.left = (i / 28 * 100) + '%';
+    t.style.height = (i % 5 === 0 ? 12 : 6) + 'px';
+    scrub.appendChild(t);
+  }
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tick() {
+    var s = reel.currentTime || 0;
+    var f = Math.floor((s % 1) * FPS);
+    tc.textContent = '00:00:' + pad(Math.floor(s)) + ':' + pad(f);
+    if (reel.duration) ph.style.left = (s / reel.duration * 100) + '%';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  var copyBtn = document.getElementById('copy');
+  var emailEl = document.getElementById('email');
+  copyBtn.addEventListener('click', function () {
+    var addr = emailEl.textContent;
+    function selectIt() {
+      var r = document.createRange(); r.selectNodeContents(emailEl);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      copyBtn.textContent = 'Press Ctrl+C to copy';
+    }
+    try {
+      navigator.clipboard.writeText(addr).then(function () {
+        copyBtn.textContent = 'Copied';
+        setTimeout(function () { copyBtn.textContent = 'Copy email'; }, 2000);
+      }, selectIt);
+    } catch (e) { selectIt(); }
+  });
+  // only one work video plays at a time
+  var vids = document.querySelectorAll('#work video');
+  vids.forEach(function (v) {
+    v.addEventListener('play', function () {
+      vids.forEach(function (o) { if (o !== v) o.pause(); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
